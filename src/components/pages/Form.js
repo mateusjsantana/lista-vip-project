@@ -28,25 +28,37 @@ import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import LiquorSharpIcon from "@mui/icons-material/LiquorSharp";
 import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
 import LockPersonIcon from "@mui/icons-material/LockPerson";
-import { enviarDadosParaBanco } from "../../backend/services/api";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import { useState } from "react";
 // app-front\src\backend\server.js
 
 const Form = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [open, setOpen] = useState(false);
 
   const onSubmit = async (data) => {
-    try {
-      // Enviar dados para o banco de dados
-      const respostaDoBanco = await enviarDadosParaBanco(data);
-      console.log("Resposta do banco:", respostaDoBanco);
-    } catch (error) {
-      console.error("Erro ao enviar dados para o banco de dados:", error);
-    }
+    console.log("Dados do formulário:", data);
+    // Simula um atraso de 2 segundos para enviar os dados
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setOpen(true);
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const festas = [
+    { nome: 'Tardezinha Cloud', data: '01/01/2024'},
+    { nome: 'Noite dos Horrores', data: '05/01/2024'},
+    { nome: 'Festa do Pijama', data: '10/01/2024' },
+    { nome: 'Carna Cloud', data: '20/02/2024'},
+
+  ];
 
   return (
     <Box
@@ -137,22 +149,28 @@ const Form = () => {
           ),
         }}
       />
-      <TextField
-        label="CPF"
-        variant="filled"
-        InputLabelProps={{ shrink: true }}
-        {...register("cpf", { required: "CPF é obrigatório" })}
-        error={Boolean(errors.cpf)}
-        helperText={errors.dataFesta?.message}
-        sx={{ width: "100%", "& .MuiInputBase-root": { width: "100%" } }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <LockPersonIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
+    <TextField
+  label="CPF"
+  variant="filled"
+  InputLabelProps={{ shrink: true }}
+  {...register("cpf", { 
+    required: "CPF é obrigatório",
+    pattern: {
+      value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+      message: "CPF deve ter o formato 444.555.555-10"
+    }
+  })}
+  error={Boolean(errors.cpf)}
+  helperText={errors.cpf?.message}
+  sx={{ width: "100%", "& .MuiInputBase-root": { width: "100%" } }}
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <LockPersonIcon />
+      </InputAdornment>
+    ),
+  }}
+/>
 
       <Divider sx={{ marginBottom: 3, width: "100%" }} />
 
@@ -167,41 +185,55 @@ const Form = () => {
       >
         <InputLabel>Número da Festa</InputLabel>
         <Select
-          {...register("numeroFesta", {
-            required: "Número da festa é obrigatório",
-          })}
-          sx={{ width: "100%", "& .MuiInputBase-root": { width: "100%" } }}
-          startAdornment={
-            <InputAdornment position="start">
-              <LiquorSharpIcon />
-            </InputAdornment>
-          }
-        >
-          <MenuItem value={1}>Festa 1</MenuItem>
-          <MenuItem value={2}>Festa 2</MenuItem>
-        </Select>
+  {...register("numeroFesta", {
+    required: "Número da festa é obrigatório",
+  })}
+  sx={{ width: "100%", "& .MuiInputBase-root": { width: "100%" } }}
+  startAdornment={
+    <InputAdornment position="start">
+      <LiquorSharpIcon />
+    </InputAdornment>
+  }
+>
+{festas.map((festa, index) => (
+  <MenuItem key={index} value={index.toString()}>
+    {festa.nome}
+  </MenuItem>
+))}
+
+</Select>
         {errors.numeroFesta && (
           <FormHelperText>{errors.numeroFesta.message}</FormHelperText>
         )}
       </FormControl>
 
-      <TextField
-        label="Data da Festa"
-        variant="filled"
-        type="date"
-        InputLabelProps={{ shrink: true }}
-        {...register("dataFesta", { required: "Data da festa é obrigatória" })}
-        error={Boolean(errors.dataFesta)}
-        helperText={errors.dataFesta?.message}
-        sx={{ width: "100%", "& .MuiInputBase-root": { width: "100%" } }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Event />
-            </InputAdornment>
-          ),
-        }}
-      />
+  <FormControl
+  variant="filled"
+  error={Boolean(errors.dataFesta)}
+  fullWidth
+>
+  <InputLabel>Data da Festa</InputLabel>
+  <Select
+    {...register("dataFesta", {
+      required: "Data da festa é obrigatória",
+    })}
+    sx={{ width: "100%", "& .MuiInputBase-root": { width: "100%" } }}
+    startAdornment={
+      <InputAdornment position="start">
+        <Event />
+      </InputAdornment>
+    }
+  >
+    {festas.map((festa, index) => (
+      <MenuItem key={index} value={festa.data}>
+        {festa.data}
+      </MenuItem>
+    ))}
+  </Select>
+  {errors.dataFesta && (
+    <FormHelperText>{errors.dataFesta.message}</FormHelperText>
+  )}
+</FormControl>
 
       <Box
         sx={{ borderRadius: "10px", border: "1px solid grey", padding: "10px" }}
@@ -228,6 +260,11 @@ const Form = () => {
       >
         Cadastrar Reserva
       </Button>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Cadastro realizado com sucesso!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

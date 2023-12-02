@@ -3,18 +3,29 @@ import { TextField, Button, Typography, Box, InputAdornment, InputLabel, Divider
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PersonIcon from '@mui/icons-material/Person';
 import MessageIcon from '@mui/icons-material/Message';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 function Contato() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [mensagem, setMensagem] = useState('');
 
+  const [open, setOpen] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(`Nome: ${nome}\nEmail: ${email}\nMensagem: ${mensagem}`);
-    // TODO: Enviar os dados para o backend, fazer com o pessoal
+    setOpen(true);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
   return (
     <Box 
         component="form"
@@ -93,10 +104,15 @@ function Contato() {
             ),
           }}
         />
-        <Button type="submit" variant="contained" color="primary">
-          Enviar
-        </Button>
       </form>
+      <Button type="submit" variant="contained" color="primary">
+        Enviar Pedido de Contato
+      </Button>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Formulário Enviado com Sucesso!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

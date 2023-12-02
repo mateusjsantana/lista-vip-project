@@ -3,12 +3,12 @@ import { Container, Typography, Card, CardContent, CardActions, Button, Divider 
 import { Link } from 'react-router-dom';
 import CelebrationIcon from '@mui/icons-material/Celebration';
 
+
 function Home() {
   const festas = [
     { nome: 'Tardezinha Cloud', local: 'Av. Deus', horario: '15:00', data: '01/01/2024' },
     { nome: 'Noite dos Horrores', local: 'Av. Deus', horario: '22:00', data: '05/01/2024' },
     { nome: 'Festa do Pijama', local: 'Club Cloud, Avenida Imoral 2002', horario: '20:00', data: '10/01/2024' },
-    { nome: 'Noite das Patras', local: 'Club Cloud, Avenida Imoral 2002', horario: '22:00', data: '15/01/2024' },
     { nome: 'Carna Cloud', local: 'Club Cloud, Avenida Imoral 2002', horario: '15:00', data: '20/02/2024' },
 
   ];
@@ -50,6 +50,7 @@ function Home() {
           </CardActions>
         </Card>
       ))}
+
     </Container>
   );
 }
