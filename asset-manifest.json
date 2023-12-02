@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/lista-vip-project/static/css/main.1aa1b982.css",
+    "main.js": "/lista-vip-project/static/js/main.f28c9b42.js",
+    "static/media/bg-site.png": "/lista-vip-project/static/media/bg-site.71a95f845a0c7a8cdbc7.png",
+    "index.html": "/lista-vip-project/index.html",
+    "main.1aa1b982.css.map": "/lista-vip-project/static/css/main.1aa1b982.css.map",
+    "main.f28c9b42.js.map": "/lista-vip-project/static/js/main.f28c9b42.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1aa1b982.css",
+    "static/js/main.f28c9b42.js"
+  ]
+}
